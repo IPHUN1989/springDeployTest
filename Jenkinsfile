@@ -6,6 +6,11 @@ pipeline {
         }
     }
     stages {
+        stage('Check user') {
+            steps {
+                sh ' echo "Current user: $(whoami)"'
+            }
+        }
         stage('Build') {
             steps {
                 sh ' mvn clean package'
