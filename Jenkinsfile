@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'maven:latest'
-            args '-u root:113 --privileged --net="jenkins"'
+            args '--privileged --net="jenkins"'
         }
     }
     stages {
