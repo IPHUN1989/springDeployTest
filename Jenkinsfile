@@ -6,6 +6,11 @@ pipeline {
         }
     }
     stages {
+        stage("Env Variables") {
+            steps {
+                sh "printenv"
+            }
+            }
         stage('Build') {
             steps {
                 sh ' mvn clean package'
@@ -16,8 +21,8 @@ pipeline {
                 withSonarQubeEnv('Sonarqube') {
                     sh 'mvn sonar:sonar'
                 }
+                mail bcc: '', body: 'Test', cc: '', from: '', replyTo: '', subject: 'Test Jenkinspipeline', to: 'illesp04b@gmail.com'
             }
         }
+        }
     }
-}
-
