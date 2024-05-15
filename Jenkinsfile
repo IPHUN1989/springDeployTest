@@ -6,23 +6,44 @@ pipeline {
         }
     }
     stages {
-        stage("Env Variables") {
+        stage('validate') {
             steps {
-                sh "printenv"
-            }
-            }
-        stage('Build') {
-            steps {
-                sh ' mvn clean package'
+                sh 'mvn clean validate'
             }
         }
+        stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Package') {
+            steps {
+                sh 'mvn package'
+            }
+        }
+        stage('Verify') {
+            steps {
+                sh 'mvn verify'
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('Sonarqube') {
                     sh 'mvn sonar:sonar'
                 }
-                mail bcc: '', body: 'Test', cc: '', from: '', replyTo: '', subject: 'Test Jenkinspipeline', to: 'illesp04b@gmail.com'
+                mail bcc: '',
+                body: 'Test',
+                cc: '',
+                from: '',
+                replyTo: '',
+                subject: 'Test Jenkinspipeline', to: 'illesp04b@gmail.com'
             }
         }
-        }
     }
+}
