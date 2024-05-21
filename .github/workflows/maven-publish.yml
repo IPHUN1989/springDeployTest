@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -31,8 +31,7 @@ jobs:
     - name: Deploy site docs output to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
-#        REPOSITORY_NAME: IPHUN1989/test_docs
-        GITHUB_TOKEN: ${{ secrets.GITHUB.TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
         BRANCH: main # The branch the action should deploy to.
         FOLDER: target/site # The folder the action should deploy.
         CLEAN: true # Automatically remove deleted files from the deploy branch
