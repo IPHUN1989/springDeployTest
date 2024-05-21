@@ -31,6 +31,7 @@ jobs:
     - name: Deploy site docs output to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@3.7.1
       with:
+        REPOSITORY_NAME: IPHUN1989/test_docs
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: main # The branch the action should deploy to.
         FOLDER: target/site # The folder the action should deploy.
