@@ -8,27 +8,37 @@ pipeline {
     stages {
         stage('validate') {
             steps {
-                sh 'mvn clean validate'
+                catchError {
+                    sh 'mvn clean validate'
+                }
             }
         }
         stage('Compile') {
             steps {
-                sh 'mvn compile'
+                catchError {
+                    sh 'mvn compile'
+                }
             }
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                catchError {
+                    sh 'mvn test'
+                }
             }
         }
         stage('Package') {
             steps {
-                sh 'mvn package'
+                catchError {
+                    sh 'mvn package'
+                }
             }
         }
         stage('Verify') {
             steps {
-                sh 'mvn verify'
+                catchError {
+                    sh 'mvn verify'
+                }
             }
         }
 
@@ -37,12 +47,25 @@ pipeline {
                 withSonarQubeEnv('Sonarqube') {
                     sh 'mvn sonar:sonar'
                 }
+            }
+        }
+
+        stage('Email notification') {
+            steps {
                 mail bcc: '',
                 body: 'Test',
                 cc: '',
                 from: '',
                 replyTo: '',
                 subject: 'Test Jenkinspipeline', to: 'illesp04b@gmail.com'
+            }
+        }
+
+        stage('Extended notification') {
+            steps {
+                emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:Check console output at $BUILD_URL to view the results.''',
+                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                to: 'illesp04b@gmail.com'
             }
         }
     }
