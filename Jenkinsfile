@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
     imagename = "iphun/sprindtest"
-    registryCredential = 'iphun-dockerhub'
+    registryCredential = 'dockerhub'
     dockerImage = ''
   }
     stages {
