@@ -9,5 +9,5 @@ RUN mvn clean package
 # Running server
 FROM eclipse-temurin:17-jre-alpine@sha256:d69f8cf3526fd75992366d2e96348682dfbc04c5d321c08d084e1fc26980d81d
 WORKDIR /usr/local/bin/
-COPY --from=build /app/target/*.jar bytebattlers.jar
-ENTRYPOINT ["java", "-jar", "bytebattlers.jar"]
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
