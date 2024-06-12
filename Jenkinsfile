@@ -2,42 +2,47 @@ pipeline {
     agent {
         docker {
             image 'maven:latest'
-            args '-u root --privileged --net="jenkins"'
+            args '-u root --privileged --net="jenkins" -v $HOME/.m2:/root/.m2'
         }
     }
+    environment {
+    imagename = "iphun/sprindtest"
+    registryCredential = 'iphun-dockerhub'
+    dockerImage = ''
+  }
     stages {
         stage('validate') {
             steps {
                 catchError {
-                    sh 'mvn clean validate'
+                    sh 'mvn clean validate -B'
                 }
             }
         }
         stage('Compile') {
             steps {
                 catchError {
-                    sh 'mvn compile'
+                    sh 'mvn compile -B'
                 }
             }
         }
         stage('Test') {
             steps {
                 catchError {
-                    sh 'mvn test'
+                    sh 'mvn test -B'
                 }
             }
         }
         stage('Package') {
             steps {
                 catchError {
-                    sh 'mvn package'
+                    sh 'mvn package -B'
                 }
             }
         }
         stage('Verify') {
             steps {
                 catchError {
-                    sh 'mvn verify'
+                    sh 'mvn verify -B'
                 }
             }
         }
@@ -45,11 +50,30 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('Sonarqube') {
-                    sh 'mvn sonar:sonar'
+                    sh 'mvn sonar:sonar -B'
                 }
             }
         }
 
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build imagename
+        }
+      }
+    }
+
+    stage('Deploy Image') {
+      steps{
+        script {
+          docker.withRegistry( '', registryCredential ) {
+            dockerImage.push("$BUILD_NUMBER")
+             dockerImage.push('latest')
+          }
+        }
+      }
+    }
+        
         stage('Email notification') {
             steps {
                 mail bcc: '',
@@ -69,4 +93,5 @@ pipeline {
             }
         }
     }
+    
 }
