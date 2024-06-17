@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
     imagename = "iphun/sprindtest"
-    DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+    DOCKERHUB_CREDENTIALS=credentials('dockerHub')
     dockerImage = ''
   }
     stages {
