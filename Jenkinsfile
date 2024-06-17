@@ -6,8 +6,9 @@ pipeline {
         }
     }
     environment {
-    imagename = "iphun/sprindtest"
+    REPOSITORY = 'iphun/'
     DOCKERHUB_CREDENTIALS=credentials('dockerHub')
+    IMAGE_NAME = 'sprindtest'
     dockerImage = ''
   }
     stages {
@@ -66,10 +67,9 @@ pipeline {
         stage('Docker Login and Push') {
                 steps {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    sh 'docker images'
-                    sh "docker tag ${imagename}:${BUILD_NUMBER} ${imagename}:latest"
-                    sh 'docker push ${imagename}:$BUILD_NUMBER'
-                    sh 'docker push ${imagename}:latest'
+                    sh 'docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${REPOSITORY}${IMAGE_NAME}:latest'
+                    sh 'docker push ${REPOSITORY}${IMAGE_NAME}:${BUILD_NUMBER}'
+                    sh 'docker push ${REPOSITORY}:latest'
                 }
         }
 
