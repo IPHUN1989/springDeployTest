@@ -1,0 +1,15 @@
+services:
+  test:
+    build:
+      context: .
+      tags:
+        - ${REPOSITORY}${IMAGE_NAME}:latest
+        - ${REPOSITORY}${IMAGE_NAME}:${BUILD_NUMBER}
+    environment:
+      - REPOSITORY=${REPOSITORY}
+      - IMAGE_NAME=${IMAGE_NAME}
+      - BUILD_NUMBER=${BUILD_NUMBER}
+
+
+
+   
