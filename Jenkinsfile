@@ -59,8 +59,7 @@ pipeline {
         stage('Building image') {
             steps{
                 script {
-                sh  'docker compose build'
-            }
+                    sh 'docker build -t ${REPOSITORY}${IMAGE_NAME}:latest -t ${REPOSITORY}${IMAGE_NAME}:${BUILD_NUMBER} .'            }
          }
         }
 
