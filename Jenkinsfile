@@ -66,27 +66,20 @@ pipeline {
         stage('Docker Login and Push') {
                 steps {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    sh "docker tag ${imagename}:${BUILD_NUMBER} ${imagename}:latest"
                     sh 'docker push iphun/sprindtest:$BUILD_NUMBER'
                     sh 'docker push iphun/sprindtest:latest'
                 }
         }
-        
-        stage('Email notification') {
-            steps {
-                mail bcc: '',
-                body: 'Test',
-                cc: '',
-                from: '',
-                replyTo: '',
-                subject: 'Test Jenkinspipeline', to: 'illesp04b@gmail.com'
-            }
-        }
 
         stage('Extended notification') {
             steps {
-                emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:Check console output at $BUILD_URL to view the results.''',
-                subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
-                to: 'illesp04b@gmail.com'
+                emailext (
+                    subject: '$DEFAULT_SUBJECT',
+                    body: '$DEFAULT_CONTENT',
+                    to: '$DEFAULT_RECIPIENTS',
+                    recipientProviders: [ requestor() ]
+                )
             }
         }
     }
