@@ -55,30 +55,23 @@ pipeline {
             }
         }
 
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build imagename
+        stage('Building image') {
+            steps{
+                script {
+                dockerImage = docker.build imagename
+            }
+         }
         }
-      }
-    }
 
-    stage('Login') {
-
-            steps {
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        stage('Docker Push') {
+            agent any
+                steps {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh 'docker push iphun/sprindtest:latest'
+                }
             }
         }
-
-
-    stage('Deploy Image') {
-      steps{
-        script {
-            dockerImage.push("$BUILD_NUMBER")
-             dockerImage.push('latest')
-        }
-      }
-    }
         
         stage('Email notification') {
             steps {
