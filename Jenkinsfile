@@ -59,7 +59,7 @@ pipeline {
         stage('Building image') {
             steps{
                 script {
-                dockerImage = docker.build imagename
+                sh  'docker build -t ${REPOSITORY}${IMAGE_NAME}:latest -t ${REPOSITORY}${IMAGE_NAME}:${BUILD_NUMBER} .'
             }
          }
         }
@@ -67,9 +67,8 @@ pipeline {
         stage('Docker Login and Push') {
                 steps {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-                    sh 'docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${REPOSITORY}${IMAGE_NAME}:latest'
                     sh 'docker push ${REPOSITORY}${IMAGE_NAME}:${BUILD_NUMBER}'
-                    sh 'docker push ${REPOSITORY}:latest'
+                    sh 'docker push ${REPOSITORY}${IMAGE_NAME}:latest'
                 }
         }
 
