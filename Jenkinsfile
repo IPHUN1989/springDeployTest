@@ -66,9 +66,10 @@ pipeline {
         stage('Docker Login and Push') {
                 steps {
                     sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                    sh 'docker images'
                     sh "docker tag ${imagename}:${BUILD_NUMBER} ${imagename}:latest"
-                    sh 'docker push iphun/sprindtest:$BUILD_NUMBER'
-                    sh 'docker push iphun/sprindtest:latest'
+                    sh 'docker push ${imagename}:$BUILD_NUMBER'
+                    sh 'docker push ${imagename}:latest'
                 }
         }
 
