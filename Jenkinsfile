@@ -63,14 +63,13 @@ pipeline {
          }
         }
 
-        stage('Docker Push') {
-            agent any
+        stage('Docker Login and Push') {
                 steps {
-                    withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW'
+                    sh 'echo $DOCKERHUB_CREDENTIALS_USR'
+                    sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
                     sh 'docker push iphun/sprindtest:latest'
                 }
-            }
         }
         
         stage('Email notification') {
